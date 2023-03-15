@@ -27,6 +27,17 @@ const addNote = function (title, body) {
   }
 };
 
+const removeNote = function (title) {
+  const notes = loadNotes();
+  const finalNotes = notes.filter((note) => note.title !== title);
+  if (notes.length === finalNotes.length) {
+    console.log(chalk.red.inverse("No such title found"));
+  } else {
+    saveNotes(finalNotes);
+    console.log(chalk.green.inverse("Note removed!"));
+  }
+};
+
 const saveNotes = function (notes) {
   fs.writeFileSync("notes.json", JSON.stringify(notes));
 };
@@ -41,4 +52,8 @@ const loadNotes = function () {
   }
 };
 
-module.exports = { getNotes: getNotes, addNote: addNote };
+module.exports = {
+  getNotes: getNotes,
+  addNote: addNote,
+  removeNote: removeNote,
+};
