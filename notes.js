@@ -2,9 +2,6 @@ const fs = require("fs");
 const chalk = require("chalk");
 const { title } = require("process");
 
-const getNotes = function () {
-  return "Your notes...";
-};
 
 const addNote = function (title, body) {
   const notes = loadNotes();
@@ -42,6 +39,19 @@ const saveNotes = function (notes) {
   fs.writeFileSync("notes.json", JSON.stringify(notes));
 };
 
+const listNotes = function () {
+  const notes = loadNotes()
+  if (notes) {
+    console.log(chalk.green.inverse("Your Notes"))
+    notes.forEach(note => {
+      console.log(note.title)
+    });
+  }
+  else {
+    console.log(chalk.red.inverse("Currently no notes"))
+  }
+}
+
 const loadNotes = function () {
   try {
     const dataBuffer = fs.readFileSync("notes.json");
@@ -52,8 +62,27 @@ const loadNotes = function () {
   }
 };
 
+const readNote = (title) => {
+  try {
+    const notes = loadNotes()
+    const findNote = notes.find((note) => note.title === title)
+    if (findNote) {
+      console.log(chalk.green.inverse(findNote.title))
+      console.log(findNote.body)
+    }
+    else {
+      console.log(chalk.red.inverse("No such note found"))
+    }
+  } catch (e) {
+    console.log(chalk.red.inverse("Note List empty"))
+  }
+
+}
+
 module.exports = {
   getNotes: getNotes,
   addNote: addNote,
   removeNote: removeNote,
+  listNotes: listNotes,
+  readNote: readNote
 };
